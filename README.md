@@ -13,3 +13,6 @@ Desafio que forma parte de Aceleración
   * react-datepicker
   * react-dom
   * react-router-dom
+
+# Credenciales
+Crear un .env

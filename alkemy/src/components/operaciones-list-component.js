@@ -1,22 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import ReactTable from 'react-table-6';
+import "react-table-6/react-table.css";  
 
-//Props actua como los componentes HTML. Cada uno popula un dato del schema.
-const Operacion = props => (
-  <tr>
-    <td>{props.operacion.concepto}</td>
-    <td>{props.operacion.monto}</td>
-    <td>{props.operacion.fecha.substring(0,10)}</td>
-    <td>{props.operacion.tipo}</td>
-    <td>{props.operacion.categoria}</td>
-    <td>
-      <Link to={"/edit/"+props.operacion._id}>Editar</Link> | <a href="#" onClick={() => { props.deleteOperacion(props.operacion._id) }}>Borrar</a>
-    </td>
-  </tr>
-)
-
-
+//Crear la clase de edición mediante component de react. Lo vamos a ver en la página.
 export default class OperacionList extends Component {
   constructor(props) {
     super(props);
@@ -26,17 +14,7 @@ export default class OperacionList extends Component {
     this.state = {operaciones: []};
   }
 
-  //Trae toda la info de la api para luego montarla en el render.
-  componentDidMount() {
-    axios.get('http://localhost:5000/operaciones/')
-      .then(response => {
-        this.setState({ operaciones: response.data })
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-  }
-
+  //Borrar una fila.
   deleteOperacion(id) {
     axios.delete('http://localhost:5000/operaciones/'+id)
       .then(response => { console.log(response.data)});
@@ -45,18 +23,11 @@ export default class OperacionList extends Component {
       operaciones: this.state.operaciones.filter(el => el._id !== id)
     })
   }
-
-  operacionList() {
-    return this.state.operaciones.map(currentoperacion => {
-      return <Operacion operacion={currentoperacion} deleteOperacion={this.deleteOperacion} key={currentoperacion._id}/>;
-    })
-  }
-
+  
+  //Función para obtener el balance.
   balance(){
     const lista = this.state.operaciones;
     
-    console.log(lista);
-
     let ingreso = 0;
     let egreso = 0;
 
@@ -68,33 +39,69 @@ export default class OperacionList extends Component {
        }
     }
 
-    console.log(ingreso);
-    console.log(egreso);
-
     return ('Balance: $ '+String(ingreso - egreso));
-
+  }
+  
+  //Obteniendo las operaciones.
+  async getUsersData(){
+    const res = await axios.get('http://localhost:5000/operaciones/')
+    console.log(res.data)
+    this.setState({loading:false, operaciones: res.data})
   }
 
+  //Hook para montar en el render.
+  componentDidMount(){
+    this.getUsersData()
+  }
+
+  //Render de las columnas.
   render() {
+    const columns = [
+      {
+        Header: 'ID',
+        accessor: '_id',
+      },
+      {  
+      Header: 'Concepto',  
+      accessor: 'concepto',
+     }
+     ,{  
+      Header: 'Monto',  
+      accessor: 'monto' ,
+      } 
+     ,{  
+     Header: 'Fecha',  
+     accessor: 'fecha' ,
+     }
+     ,{  
+     Header: 'Tipo',  
+     accessor: 'tipo',
+     },
+     {  
+      Header: 'Categoria',  
+      accessor: 'categoria',
+     },
+     {
+      Header: 'Editar',    
+      Cell: ({row}) => (<Link to={{pathname:`/edit/${row._id}`, state:{data: row}}}>Editar</Link>),
+     },
+     {
+      Header: 'Borrar',
+      Cell: ({row}) => (<a href="#" onClick={() => { this.deleteOperacion(`${row._id}`)}}>Borrar</a>),
+     }
+     
+  ]
+    //Vista principal.
     return (
       <div>
         <h3 align='center'> Operaciones </h3>
         <br/>
         <h3 align='center'>{ this.balance() }</h3>
-        <table className="table">
-          <thead className="thead-light">
-            <tr>
-              <th>Concepto</th>
-              <th>Monto</th>
-              <th>Fecha</th>
-              <th>Tipo</th>
-              <th>Categoria</th>
-            </tr>
-          </thead>
-          <tbody>
-            { this.operacionList() }
-          </tbody>
-        </table>
+          <ReactTable  
+          data={this.state.operaciones}  
+          columns={columns}
+          
+          />
       </div>
     )
   }

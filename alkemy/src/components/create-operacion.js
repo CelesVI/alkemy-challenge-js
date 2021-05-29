@@ -3,11 +3,12 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
+//Crear la clase de edición mediante component de react. Lo vamos a ver en la página.
 export default class CreateExercise extends Component {
   constructor(props) {
     super(props);
 
-    //Constructor para la operación. Bind para referir cada propiedad correspondiente.
+    //Constructor para la operación. Bind para referir cada change a la clase.
     this.onChangeConcepto = this.onChangeConcepto.bind(this);
     this.onChangeMonto = this.onChangeMonto.bind(this);
     this.onChangeFecha = this.onChangeFecha.bind(this);
@@ -15,7 +16,7 @@ export default class CreateExercise extends Component {
     this.onChangeCategoria = this.onChangeCategoria.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-    //State para guardar los valores pasados en el component.
+    //State para guardar los valores pasados en el component. Info específica del componente que cambia con el tiempo.
     this.state = {
       concepto: '',
       monto: 0,
@@ -25,7 +26,7 @@ export default class CreateExercise extends Component {
     }
   }
 
-  //Target value para el valor actual.
+  //Target value para el valor actual. Acutualiza el estado.
   onChangeConcepto(e) {
     this.setState({
       concepto: e.target.value
@@ -79,6 +80,7 @@ export default class CreateExercise extends Component {
     window.location = '/';
   }
 
+  //Render del form.
   render() {
     return (
     <div>

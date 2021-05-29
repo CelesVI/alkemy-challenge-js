@@ -1,4 +1,4 @@
-//Router nos permite rutear ls direcciones de nuestra api mediante los métodos httl.
+//Router nos permite rutear ls direcciones de nuestra api.
 const router = require('express').Router();
 let Operacion = require('../models/operaciones');
 
@@ -63,4 +63,5 @@ router.route('/update/:id').post((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+//Exports el router para usarlo en otros módulos. 
 module.exports = router;

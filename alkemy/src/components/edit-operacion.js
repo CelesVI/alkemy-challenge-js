@@ -5,10 +5,12 @@ import "react-datepicker/dist/react-datepicker.css";
 
 //Crear la clase de edición mediante component de react. Lo vamos a ver en la página.
 export default class EditOperacion extends Component {
+  //Constructor 
   constructor(props) {
     //Pasando data através de props.
     super(props);
 
+    //Bind para pasar info entre funciones.
     this.onChangeConcepto = this.onChangeConcepto.bind(this);
     this.onChangeMonto = this.onChangeMonto.bind(this);
     this.onChangeFecha = this.onChangeFecha.bind(this);
@@ -16,7 +18,7 @@ export default class EditOperacion extends Component {
     this.onChangeCategoria = this.onChangeCategoria.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-    //Uso de state para la modificación de la operación.
+    //Uso de state para la modificación de la operación. Estado inicial con los componenetes de la base de datos.
     this.state = {
       concepto: '',
       monto: '',
@@ -26,6 +28,7 @@ export default class EditOperacion extends Component {
     }
   }
 
+  //Match de la propiedad con el parámetro para mandar el id correcto.
   componentDidMount() {
     axios.get('http://localhost:5000/operaciones/'+this.props.match.params.id)
       .then(response => {
@@ -72,6 +75,7 @@ export default class EditOperacion extends Component {
     })
   }
 
+  //Ejecutar al hacer clic, post en el update.
   onSubmit(e) {
     e.preventDefault();
 
@@ -91,6 +95,7 @@ export default class EditOperacion extends Component {
     window.location = '/';
   }
 
+  //Render del form.
   render() {
     return (
     <div>

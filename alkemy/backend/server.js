@@ -17,7 +17,7 @@ app.use(express.json());
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true});
 
-//Conecxión a la base de datos.
+//Conexión a la base de datos.
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log("MongoDB databse connection established successfully")
